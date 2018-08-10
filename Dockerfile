@@ -33,14 +33,15 @@ RUN echo "deb http://ftp.debian.org/debian stretch-backports main" >> /etc/apt/s
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 USER node
-RUN cd /home/node && \
-    npm install yarn && \
+WORKDIR /home/node
+RUN set -x && \
     mkdir mozilla-iot && \
     cd mozilla-iot && \
     git clone https://github.com/mozilla-iot/intent-parser && \
     git clone https://github.com/mozilla-iot/gateway && \
     cd gateway && \
-    /home/node/node_modules/.bin/yarn
+    npm install yarn && \
+    yarn
 
 USER root
 ADD service /etc/service
