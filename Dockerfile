@@ -17,7 +17,7 @@ RUN echo "deb http://ftp.debian.org/debian stretch-backports main" >> /etc/apt/s
         libopenzwave1.5 \
         libopenzwave1.5-dev \
         python \
-        python-pip \
+                python-pip \
         python-setuptools \
         python3 \
         python3-pip \
@@ -31,6 +31,10 @@ RUN echo "deb http://ftp.debian.org/debian stretch-backports main" >> /etc/apt/s
     usermod -a -G sudo node && \
     touch /etc/inittab && \
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+RUN set -x && \
+  apt-get update -y && \
+  apt-get install -y wpasupplicant
 
 USER node
 WORKDIR /home/node
