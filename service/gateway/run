@@ -1,5 +1,16 @@
 #!/bin/sh
+set -x
+set -e
 
 export MOZIOT_HOME=/home/node/.mozilla-iot
 exec 2>&1
-exec su - node -c "cd /home/node/mozilla-iot/gateway && ./run-app.sh"
+cd "/home/node/mozilla-iot/gateway"
+[ -f run-app.sh.orig ] || cp -a run-app.sh run-app.sh.orig
+tail run-app.sh
+cp -av run-app.sh.orig run-app.sh
+#sed -n -e 's/^run_app .*/run-app  | tee "${MOZIOT_HOME}\/log\/run-app.log" 2>&1/gp' -i run-app.sh
+grep -v 'run_app' < run-app.sh > run-app.sh.tmp
+echo 'run_app | tee "${MOZIOT_HOME}/log/run-app.log" 2>&1' >> run-app.sh.tmp
+mv run-app.sh.tmp run-app.sh
+tail run-app.sh
+exec su - node -c "cd /home/node/mozilla-iot/gateway && bash -x ./run-app.sh"
